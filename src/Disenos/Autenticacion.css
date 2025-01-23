@@ -1,0 +1,95 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../Imagenes/Logo\ Recursos.png'); /* Cambia la ruta según sea necesario */
+    background-size: cover;
+    background-position: center;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.login-box {
+    position: relative;
+    max-width: 400px;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 15px 125px rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    text-align: center;
+    color: #333;
+}
+
+.logo {
+    width: 150px; /* Ajusta el tamaño del logo según sea necesario */
+    margin-bottom: 30px; /* Espacio debajo del logo */
+}
+
+.user-box {
+    position: relative;
+}
+
+.user-box input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 2px solid #333;
+    outline: none;
+    background: transparent;
+}
+
+.user-box label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #333;
+    pointer-events: none;
+    transition: 0.5s;
+}
+
+.user-box input:focus ~ label,
+.user-box input:valid ~ label {
+    top: -20px;
+    left: 0;
+    color: #C2631F;
+    font-size: 12px;
+}
+
+.btn {
+    background: #C2631F;
+    border: none;
+    color: #fff;
+    padding: 15px 50px;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.5s;
+    font-size: 15px;
+}
+
+.btn:hover {
+    background: #039be5;
+}
+.brand-logo {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 200px;
+    height: auto;
+    z-index: 1000;
+}

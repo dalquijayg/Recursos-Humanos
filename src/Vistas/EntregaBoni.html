@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrega de Bonificaciones</title>
+    <link rel="stylesheet" href="../Disenos/EntregaBoni.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Estado diferente a 3 -->
+        <div id="estadoAlerta" class="alerta-estado" style="display: none;">
+            <i class="fas fa-info-circle"></i>
+            <div class="alerta-contenido">
+                <h2>Estado de la Solicitud</h2>
+                <p id="mensajeEstado"></p>
+            </div>
+        </div>
+
+        <!-- Estado 3 - Información completa -->
+        <div id="infoBonificacion" class="card-bonificacion" style="display: none;">
+            <div class="header-section">
+                <div class="monto-principal">
+                    <h3>Monto Total de Bonificación</h3>
+                    <div class="monto-display">
+                        <i class="fas fa-quetzal">Q</i>
+                        <span id="montoTotal">0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <i class="fas fa-building"></i>
+                    <div class="info-content">
+                        <label>Departamento</label>
+                        <span id="departamento"></span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-user-check"></i>
+                    <div class="info-content">
+                        <label>Autorizado por</label>
+                        <span id="autorizadoPor"></span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <div class="info-content">
+                        <label>Fecha de Autorización</label>
+                        <span id="fechaAutorizacion"></span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <div class="info-content">
+                        <label>Mes de Bonificación</label>
+                        <span id="mesBonificacion"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="estado-section">
+                <div class="estado-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="estadoActual"></span>
+                </div>
+                <!-- Botón para generar PDF -->
+                <button id="btnGenerarPDF" class="btn-generar-pdf">
+                    <i class="fas fa-file-pdf"></i> Generar Boletas PDF
+                </button>
+            </div>
+
+            <!-- Lista de personal -->
+            <div class="lista-personal-section">
+                <h3 class="lista-personal-title">
+                    <i class="fas fa-users"></i>
+                    Personal Pendiente de Entrega
+                </h3>
+                <div class="lista-personal-grid" id="listaPersonal">
+                    <!-- Aquí se insertará dinámicamente la lista de personal -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loadingSpinner" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Generando PDF, por favor espere...</p>
+        </div>
+    </div>
+    <script src="../Logica/EntregaBoni.js"></script>
+</body>
+</html>

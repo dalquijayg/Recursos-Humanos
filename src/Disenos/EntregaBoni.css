@@ -1,0 +1,341 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+    color: #334e68;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 1rem;
+    margin: 0;
+}
+
+/* Alerta de Estado */
+.alerta-estado {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 2rem auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.alerta-estado i {
+    font-size: 2.5rem;
+    color: #3498db;
+}
+
+.alerta-contenido h2 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.alerta-contenido p {
+    color: #555;
+    font-size: 1.1rem;
+}
+
+/* Card de Bonificación */
+.card-bonificacion {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    margin-bottom: 2rem;
+}
+
+.header-section {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.monto-principal {
+    display: inline-block;
+    padding: 2rem 3rem;
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    border-radius: 15px;
+    color: white;
+    box-shadow: 0 8px 20px rgba(14, 165, 233, 0.2);
+}
+
+.monto-principal h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.monto-display {
+    font-size: 2.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.fa-quetzal {
+    font-family: Arial, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+}
+
+/* Info Grid */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+}
+
+.info-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.info-item i {
+    font-size: 1.5rem;
+    color: #0ea5e9;
+    padding: 0.5rem;
+    background: rgba(14, 165, 233, 0.1);
+    border-radius: 8px;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-content label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.3rem;
+}
+
+.info-content span {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+/* Estado Section */
+.estado-section {
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+}
+
+.estado-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 25px;
+    font-weight: 500;
+}
+
+.estado-badge i {
+    font-size: 1.2rem;
+}
+
+/* Lista de Personal Section */
+.lista-personal-section {
+    margin-top: 3rem;
+    background: #f8fafc;
+    border-radius: 15px;
+    padding: 2rem;
+    border: 1px solid #e2e8f0;
+}
+
+.lista-personal-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #0f172a;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+.lista-personal-title i {
+    color: #0ea5e9;
+}
+
+.lista-personal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Tarjeta de Personal */
+.personal-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.personal-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.personal-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.personal-avatar {
+    width: 48px;
+    height: 48px;
+    background: #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.personal-avatar i {
+    font-size: 1.5rem;
+    color: #64748b;
+}
+
+.personal-details {
+    flex: 1;
+}
+
+.personal-name {
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.personal-monto {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #0ea5e9;
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.personal-monto i {
+    font-size: 1rem;
+    margin-right: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+    
+    .monto-principal {
+        padding: 1.5rem;
+        width: 100%;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .lista-personal-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .personal-card {
+        padding: 1.25rem;
+    }
+    
+    .lista-personal-section {
+        padding: 1.5rem;
+    }
+}
+.btn-generar-pdf {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-left: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-generar-pdf:hover {
+    background: #b91c1c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+}
+
+.btn-generar-pdf i {
+    font-size: 1.2rem;
+}
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #0ea5e9;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-content p {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+}

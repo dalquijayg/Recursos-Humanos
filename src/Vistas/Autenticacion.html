@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="../Disenos/Autenticacion.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <img src="../Imagenes/Logo3.JPG" alt="New Technology Logo" class="brand-logo">
+    <div class="container">
+        <div class="login-box">
+            <img src="../Imagenes/Logo Recursos Humanos new.png" alt="Logo" class="logo">
+            <form id="loginForm">
+                <div class="user-box">
+                    <input type="text" id="dpi" required>
+                    <label>No. de DPI</label>
+                </div>
+                <button type="submit" class="btn" disabled>Ingresar</button>
+            </form>
+        </div>
+    </div>
+    <script src="../Logica/Autenticacion.js"></script>
+    <script>
+        const { ipcRenderer } = require('electron');
+        
+        ipcRenderer.on('update_available', () => {
+            ipcRenderer.removeAllListeners('update_available');
+            Swal.fire({
+                title: '¡Actualización disponible!',
+                text: 'Se está descargando una nueva versión. Te notificaremos cuando esté lista.',
+                icon: 'info'
+            });
+        });
+        
+        ipcRenderer.on('update_downloaded', () => {
+            ipcRenderer.removeAllListeners('update_downloaded');
+            Swal.fire({
+                title: '¡Actualización lista!',
+                text: 'Se ha descargado una nueva versión. La aplicación se reiniciará para instalar la actualización.',
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Reiniciar ahora'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    ipcRenderer.send('restart_app');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

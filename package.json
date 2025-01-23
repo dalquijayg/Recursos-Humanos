@@ -1,0 +1,48 @@
+{
+  "name": "recursos-humanos",
+  "version": "1.0.1",
+  "description" :"",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron .",
+    "pack":"electron-build",
+    "package": "electron-builder -p always",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "build": {
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "src/LogoRecursos.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "src/LogoRecursos.ico",
+      "uninstallerIcon": "src/LogoRecursos.ico",
+      "installerHeaderIcon": "src/LogoRecursos.ico"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "dalquijayg",
+        "repo": "Recursos-Humanos"
+      }
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron-log": "^5.2.0",
+    "electron-reload": "^2.0.0-alpha.1",
+    "electron-updater": "^6.3.4",
+    "odbc": "^2.4.8",
+    "sweetalert2": "^11.12.4"
+  },
+  "devDependencies": {
+    "electron": "^31.3.1",
+    "electron-builder": "^24.6.4"
+  }
+}

@@ -1,0 +1,420 @@
+:root {
+    --primary: #6366f1;
+    --primary-light: #818cf8;
+    --primary-dark: #4f46e5;
+    --success: #10b981;
+    --success-light: #34d399;
+    --background: #f8fafc;
+    --surface: #ffffff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--background);
+    color: var(--gray-800);
+    line-height: 1.5;
+}
+
+.container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.info-summary {
+    background: var(--surface);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.date-selector {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.select-group {
+    min-width: 200px;
+}
+
+.select-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--gray-600);
+    margin-bottom: 0.5rem;
+}
+
+select {
+    width: 100%;
+    padding: 0.625rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 0.5rem;
+    background: var(--surface);
+    font-size: 0.925rem;
+    color: var(--gray-800);
+    transition: all 0.2s;
+}
+
+select:hover {
+    border-color: var(--primary-light);
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--gray-50);
+    border-radius: 0.75rem;
+    min-width: 200px;
+}
+
+.info-item i {
+    font-size: 1.25rem;
+    color: var(--primary);
+}
+
+.collaborators-table {
+    background: var(--surface);
+    border-radius: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.table-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.table-header h2 {
+    color: var(--gray-800);
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.table-container {
+    flex: 1;
+    overflow: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+th {
+    position: sticky;
+    top: 0;
+    background: var(--gray-50);
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-weight: 500;
+    color: var(--gray-600);
+    border-bottom: 2px solid var(--gray-200);
+    white-space: nowrap;
+    z-index: 10;
+}
+
+td {
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid var(--gray-200);
+    color: var(--gray-700);
+}
+
+tr:hover {
+    background: var(--gray-50);
+}
+
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 0.625rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 0.5rem;
+    font-size: 0.925rem;
+    transition: all 0.2s;
+}
+
+input[type="number"]:hover,
+textarea:hover {
+    border-color: var(--primary-light);
+}
+
+input[type="number"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.monto-final {
+    font-weight: 600;
+    color: var(--primary);
+    background: rgba(99, 102, 241, 0.1);
+    padding: 0.625rem;
+    border-radius: 0.5rem;
+    text-align: right;
+}
+
+.btn-finalizar {
+    background: var(--success);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: auto;
+}
+
+.btn-finalizar:hover:not(:disabled) {
+    background: var(--success-light);
+    transform: translateY(-1px);
+}
+
+.btn-finalizar:disabled {
+    background: var(--gray-300);
+    cursor: not-allowed;
+}
+
+.floating-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--primary);
+    color: white;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+    z-index: 20;
+}
+
+.floating-button:hover {
+    background: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.guardado-status {
+    color: var(--success);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+button[class*="Guardar"],
+.action-button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
+}
+button[class*="Guardar"]:hover,
+.action-button:hover {
+    background: var(--primary-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(99, 102, 241, 0.3);
+}
+
+button[class*="Guardar"]:active,
+.action-button:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(99, 102, 241, 0.2);
+}
+
+button[class*="Guardar"] i,
+.action-button i {
+    font-size: 1rem;
+}
+
+/* Estado guardado */
+.guardado {
+    color: var(--success);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.guardado i {
+    font-size: 1rem;
+}
+
+/* Ajustar el espaciado de la tabla */
+td[class^="nombre-colaborador"] {
+    padding-left: 1.5rem;
+}
+.filters-section {
+    background: var(--surface);
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-group {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+}
+
+.search-group i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400);
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 0.5rem;
+    font-size: 0.925rem;
+    transition: all 0.2s;
+}
+
+.search-input:hover {
+    border-color: var(--primary-light);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+.spinner {
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.action-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background: var(--gray-400);
+}
+.row-saved {
+    background-color: #f0fdf4 !important; /* Verde muy suave */
+    transition: background-color 0.3s ease;
+}
+
+.row-saved:hover {
+    background-color: #dcfce7 !important; /* Verde suave al hacer hover */
+}
+
+.row-saved td {
+    border-color: #bbf7d0 !important; /* Borde verde muy suave */
+}
+@media (max-width: 768px) {
+    .filters-section {
+        padding: 0.75rem;
+    }
+    
+    .search-group {
+        width: 100%;
+    }
+}
+@media (max-width: 768px) {
+    .container {
+        padding: 0.5rem;
+    }
+
+    .info-summary {
+        padding: 1rem;
+    }
+
+    .date-selector {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .select-group {
+        width: 100%;
+    }
+
+    .info-item {
+        width: 100%;
+    }
+
+    td, th {
+        padding: 0.75rem 1rem;
+    }
+}
+@keyframes highlightSaved {
+    0% {
+        background-color: #ffffff;
+    }
+    50% {
+        background-color: #dcfce7;
+    }
+    100% {
+        background-color: #f0fdf4;
+    }
+}

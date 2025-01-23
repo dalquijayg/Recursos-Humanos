@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Bonificaciones</title>
+    <link rel="stylesheet" href="../Disenos/RegistroBoni.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="info-summary">
+            <div class="date-selector">
+                <div class="select-group">
+                    <label>Mes</label>
+                    <select id="mesSelect">
+                        <option value="01">Enero</option>
+                        <option value="02">Febrero</option>
+                        <option value="03">Marzo</option>
+                        <option value="04">Abril</option>
+                        <option value="05">Mayo</option>
+                        <option value="06">Junio</option>
+                        <option value="07">Julio</option>
+                        <option value="08">Agosto</option>
+                        <option value="09">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                    </select>
+                </div>
+                <div class="select-group">
+                    <label>Año</label>
+                    <select id="yearSelect">
+                        <!-- Se llenará dinámicamente con JavaScript -->
+                    </select>
+                </div>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-users"></i>
+                <span>Personal Total: </span>
+                <span id="totalPersonal">0</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-id-card"></i>
+                <span>ID Bonificación: </span>
+                <span id="idBonificacion">-</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>Total: Q</span>
+                <span id="montoTotal">0.00</span>
+            </div>
+            <button id="finalizarBtn" class="btn-finalizar" disabled>
+                Finalizar Registro
+            </button>
+        </div>
+        <div class="filters-section">
+            <div class="search-group">
+                <i class="fas fa-search"></i>
+                <input 
+                    type="text" 
+                    id="searchNombre" 
+                    placeholder="Buscar por nombre..."
+                    class="search-input"
+                />
+            </div>
+            <div class="search-group">
+                <i class="fas fa-briefcase"></i>
+                <input 
+                    type="text" 
+                    id="searchPuesto" 
+                    placeholder="Buscar por puesto..."
+                    class="search-input"
+                />
+            </div>
+        </div>
+        <div class="collaborators-table">
+            <div class="table-header">
+                <h2>Registro de Bonificaciones</h2>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Colaborador</th>
+                            <th>ID</th>
+                            <th>Departamento</th>
+                            <th>Monto Inicial</th>
+                            <th>Descuento Auditoría</th>
+                            <th>Descuento Crédito</th>
+                            <th>Monto Final</th>
+                            <th>Observación</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="collaboratorsTableBody">
+                        <!-- El contenido se generará dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    
+        <button id="loadButton" class="floating-button">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+    </div>
+    <script src="../Logica/RegistroBoni.js"></script>
+</body>
+</html>

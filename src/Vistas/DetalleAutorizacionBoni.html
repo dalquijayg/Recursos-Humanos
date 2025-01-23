@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Bonificación</title>
+    <link rel="stylesheet" href="../Disenos/DetalleAutorizacionBoni.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div class="header-content">
+                    <i class="fas fa-money-bill-wave header-icon"></i>
+                    <h1>Detalle de Bonificación</h1>
+                </div>
+                <button class="btn btn-back" onclick="window.location.href='AutorizacionBoni.html'">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </button>
+            </div>
+            
+            <div class="summary-section">
+                <div class="summary-card total-amount">
+                    <i class="fas fa-quetzal card-icon">Q</i>
+                    <div class="card-info">
+                        <h2>Monto Total</h2>
+                        <span id="montoTotal">Q0.00</span>
+                    </div>
+                </div>
+                <div class="summary-card total-employees">
+                    <i class="fas fa-users card-icon"></i>
+                    <div class="card-info">
+                        <h2>Total Colaboradores</h2>
+                        <span id="totalColaboradores">0</span>
+                    </div>
+                </div>
+                <div class="summary-card total-discount">
+                    <i class="fas fa-calculator card-icon"></i>
+                    <div class="card-info">
+                        <h2>Total Descuentos</h2>
+                        <span id="totalDescuentos">Q0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="detalleTable">
+                    <thead>
+                        <tr>
+                            <th>Colaborador</th>
+                            <th>Monto Original</th>
+                            <th>Descuento Auditoría</th>
+                            <th>Descuento Créditos</th>
+                            <th>Monto a Recibir</th>
+                            <th>Observación</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detalleBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="actions-section">
+                <button class="btn btn-aprobar" onclick="aprobarBonificacion()">
+                    <i class="fas fa-check"></i> Aprobar
+                </button>
+                <button class="btn btn-rechazar" onclick="rechazarBonificacion()">
+                    <i class="fas fa-times"></i> Rechazar
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="save-overlay">
+        <div class="save-content">
+            <div class="spinner"></div>
+            <div class="check-mark"></div>
+            <p class="save-text">Guardando cambios...</p>
+        </div>
+    </div>
+    <script src="../Logica/DetalleAutorizacionBoni.js"></script>
+</body>
+</html>

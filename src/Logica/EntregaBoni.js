@@ -150,7 +150,11 @@ async function cargarListaPersonal() {
                         <div class="personal-name">${persona.NombreColaborador}</div>
                         <div class="personal-monto">
                             <i class="fas fa-quetzal">Q</i>
-                            <span>${montoFormateado}</span>
+                            <span class="monto-value" style="display: none">${montoFormateado}</span>
+                            <span class="monto-hidden">*****</span>
+                            <button class="toggle-monto" onclick="toggleMonto(this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -383,9 +387,9 @@ async function configurar2FA(connection, idUsuario, nombre) {
     }
 }
 async function registrarEntrega(connection, idUsuario) {
-    const currentDate = new Date();
-    const fechaEntrega = currentDate.toISOString().split('T')[0];
-    const fechaHoraEntrega = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+    const currentDate = moment().tz("America/Guatemala").format('YYYY-MM-DD HH:mm:ss');
+    const fechaEntrega = currentDate.split(' ')[0];
+    const fechaHoraEntrega = currentDate;
 
     await connection.query(
         `UPDATE DetalleBonificaciones 
@@ -437,8 +441,108 @@ async function generarPDF() {
         const mesBonificacion = document.getElementById('mesBonificacion').textContent;
         const userData = JSON.parse(localStorage.getItem('userData'));
         const connection = await connectionString();
+ 
+        // Obtener datos de bonificación
+        const infoQuery = `
+            SELECT Bonificaciones.*, departamentos.Nombre AS Departamento
+            FROM Bonificaciones 
+            INNER JOIN departamentos ON Bonificaciones.IdDepartamento = departamentos.Id_Departamento
+            WHERE IdBonificacion = ?`;
+        const bonificacion = (await connection.query(infoQuery, [currentBonificacionId]))[0];
         
-        // Consulta SQL
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'letter'
+        });
+ 
+        // Página de resumen
+        const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        const [year, month] = bonificacion.Mes.split('-');
+        const mesFormateado = `${meses[parseInt(month) - 1]} ${year}`;
+        const montoDecrypt = parseFloat(decrypt(bonificacion.MontoTotal));
+ 
+        // Encabezado
+        pdf.setFillColor(51, 51, 51);
+        pdf.rect(0, 0, 215.9, 25, 'F');
+        pdf.setTextColor(255, 255, 255);
+        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(20);
+        pdf.text('Hoja de Bonificacion', 105, 15, { align: 'center' });
+ 
+        // Restablecer color de texto
+        pdf.setTextColor(0, 0, 0);
+ 
+        // Tarjeta de información
+        pdf.setFillColor(249, 250, 251);
+        pdf.setDrawColor(230, 230, 230);
+        pdf.roundedRect(20, 70, 175, 80, 3, 3, 'FD');
+ 
+        const montoFormateado = montoDecrypt.toLocaleString('es-GT', { 
+            minimumFractionDigits: 2, 
+            maximumFractionDigits: 2 
+        });
+ 
+        // Títulos y valores
+        pdf.setFontSize(12);
+        pdf.setFont('helvetica', 'bold');
+        const campos = [
+            ['No. Bonificación:', bonificacion.IdBonificacion.toString()],
+            ['Departamento:', bonificacion.Departamento],
+            ['Periodo:', mesFormateado],
+            ['Monto Total:', `Q ${montoFormateado}`]
+        ];
+ 
+        let yPos = 85;
+        campos.forEach(([titulo, valor]) => {
+            pdf.setFont('helvetica', 'bold');
+            pdf.text(titulo, 30, yPos);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(valor, 90, yPos);
+            yPos += 15;
+        });
+ 
+        // Área de firmas
+        pdf.setFillColor(249, 250, 251);
+        pdf.roundedRect(20, 160, 175, 60, 3, 3, 'FD');
+ 
+        pdf.setDrawColor(200, 200, 200);
+        pdf.setLineWidth(0.5);
+        pdf.line(30, 190, 100, 190);
+        pdf.line(120, 190, 190, 190);
+ 
+        pdf.setFontSize(10);
+        pdf.text('Firma Entregó', 45, 195);
+        pdf.text('Firma de Testigo', 140, 195);
+ 
+        pdf.setFontSize(8);
+        pdf.setTextColor(128, 128, 128);
+        pdf.text('Entregó', 45, 200);
+        pdf.text('Gerente de Departamento', 140, 200);
+ 
+        // Footer
+        pdf.setFillColor(51, 51, 51);
+        pdf.rect(0, 267, 215.9, 10, 'F');
+        pdf.setTextColor(255, 255, 255);
+        pdf.setFontSize(8);
+        pdf.text('Documento generado por el Sistema de Recursos Humanos', 105, 273, { align: 'center' });
+ 
+        // Fecha de generación
+        pdf.setTextColor(128, 128, 128);
+        const fechaGeneracion = new Date().toLocaleDateString('es-GT', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        pdf.text(`Generado: ${fechaGeneracion}`, 20, 260);
+ 
+        // Nueva página para boletas
+        pdf.addPage();
+ 
+        // Consulta SQL para boletas
         const query = `
             SELECT
                 CONCAT(personal.Primer_Nombre, ' ', 
@@ -459,26 +563,10 @@ async function generarPDF() {
                 ON DetalleBonificaciones.IdUsuario = personal.Id
             WHERE DetalleBonificaciones.IdBonificacion = ?
         `;
-
+ 
         const personal = await connection.query(query, [currentBonificacionId]);
-
-        // Configurar el PDF
-        const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: 'letter'
-        });
-
-        // Función para mostrar monto con línea punteada
-        function drawAmountWithDots(pdf, label, amount, x, y, width) {
-            const dotStartX = x + 50; // Posición donde empiezan los puntos
-            const amountText = `Q ${amount.toLocaleString('es-GT', { minimumFractionDigits: 2 })}`;
-            
-            pdf.text(label, x + 4, y);
-            pdf.text(amountText, x + width - 4, y, { align: 'right' });
-        }
-
-        // Ajustar dimensiones para 6 boletas pegadas
+ 
+        // Configuración de boletas
         const marginX = 10;
         const marginY = 10;
         const boletaWidth = 98;
@@ -487,70 +575,78 @@ async function generarPDF() {
         const filas = 3;
         const espacioX = 0;
         const espacioY = 0;
-
-        let currentPage = 0;
         const boletasPorPagina = columnas * filas;
-
+ 
         for (let i = 0; i < personal.length; i++) {
             const persona = personal[i];
-
+ 
+            if (i > 0 && i % boletasPorPagina === 0) {
+                pdf.addPage();
+            }
+ 
             const posicionEnPagina = i % boletasPorPagina;
             const columna = posicionEnPagina % columnas;
             const fila = Math.floor(posicionEnPagina / columnas);
-
-            if (posicionEnPagina === 0 && i > 0) {
-                pdf.addPage();
-                currentPage++;
-            }
-
             const x = marginX + columna * (boletaWidth + espacioX);
             const y = marginY + fila * (boletaHeight + espacioY);
-
-            // Obtener datos y desencriptar montos
+ 
+            // Datos y montos
             const puesto = await obtenerPuestoEmpleado(persona.IdUsuario);
             const montoInicialDecrypt = parseFloat(decrypt(persona.MontoInicial));
             const descuentoAuditoriaDecrypt = parseFloat(decrypt(persona.DescuentoAuditoria || '0'));
             const descuentoCreditosDecrypt = parseFloat(decrypt(persona.DescuentoCreditos || '0'));
             const montoFinalDecrypt = parseFloat(decrypt(persona.Monto));
-
+ 
             // Dibujar boleta
             pdf.setDrawColor(200, 200, 200);
             pdf.rect(x, y, boletaWidth, boletaHeight);
             pdf.setFillColor(240, 240, 240);
             pdf.rect(x, y, boletaWidth, 8, 'F');
-
-            // Título
+ 
+            // Título de boleta
+            pdf.setTextColor(0, 0, 0);
             pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(10);
-            pdf.text('BOLETA DE BONIFICACIÓN', x + boletaWidth/2, y + 5, { align: 'center' });
-
+            pdf.text('Complemento', x + boletaWidth/2, y + 5, { align: 'center' });
+ 
             // Información principal
             pdf.setFont('helvetica', 'normal');
             pdf.setFontSize(8);
             let currentY = y + 12;
             const lineHeight = 4.5;
-
+ 
             // Información básica
-            pdf.text(`Departamento: ${departamento}`, x + 4, currentY);
-            currentY += lineHeight;
-            pdf.text(`Puesto: ${puesto}`, x + 4, currentY);
-            currentY += lineHeight;
-            pdf.text(`Colaborador: ${persona.NombreColaborador}`, x + 4, currentY);
-            currentY += lineHeight;
-            pdf.text(`Mes: ${mesBonificacion}`, x + 4, currentY);
-            currentY += lineHeight * 1.5;
-
-            // Desglose de montos con líneas punteadas
+            const basicInfo = [
+                [`Departamento: ${departamento}`, currentY],
+                [`Puesto: ${puesto}`, currentY + lineHeight],
+                [`Colaborador: ${persona.NombreColaborador}`, currentY + lineHeight * 2],
+                [`Mes: ${mesFormateado}`, currentY + lineHeight * 3]
+            ];
+ 
+            basicInfo.forEach(([texto, yPos]) => {
+                pdf.text(texto, x + 4, yPos);
+            });
+ 
+            currentY += lineHeight * 4.5;
+ 
+            // Función para dibujar montos
+            function drawAmountWithDots(label, amount, yPos) {
+                const amountText = `Q ${amount.toLocaleString('es-GT', { minimumFractionDigits: 2 })}`;
+                pdf.text(label, x + 4, yPos);
+                pdf.text(amountText, x + boletaWidth - 4, yPos, { align: 'right' });
+            }
+ 
+            // Desglose de montos
             pdf.setFont('helvetica', 'bold');
-            pdf.setFontSize(8.5);
-            drawAmountWithDots(pdf, 'Monto Inicial:', montoInicialDecrypt, x, currentY, boletaWidth);
+            drawAmountWithDots('Monto Inicial:', montoInicialDecrypt, currentY);
             currentY += lineHeight;
-
+ 
+            // Descuentos y observaciones
             pdf.setFont('helvetica', 'normal');
             if (descuentoAuditoriaDecrypt > 0) {
-                drawAmountWithDots(pdf, '(-) Descuento Auditoría:', descuentoAuditoriaDecrypt, x, currentY, boletaWidth);
+                drawAmountWithDots('(-) Descuento Auditoría:', descuentoAuditoriaDecrypt, currentY);
                 currentY += lineHeight;
-
+ 
                 if (persona.ObservacionAuditoria) {
                     pdf.setFontSize(7);
                     const observacionLines = pdf.splitTextToSize(
@@ -564,11 +660,11 @@ async function generarPDF() {
                     pdf.setFontSize(8.5);
                 }
             }
-
+ 
             if (descuentoCreditosDecrypt > 0) {
-                drawAmountWithDots(pdf, '(-) Descuento Créditos:', descuentoCreditosDecrypt, x, currentY, boletaWidth);
+                drawAmountWithDots('(-) Descuento Créditos:', descuentoCreditosDecrypt, currentY);
                 currentY += lineHeight;
-
+ 
                 if (persona.ObservacionCreditos) {
                     pdf.setFontSize(7);
                     const observacionLines = pdf.splitTextToSize(
@@ -582,68 +678,86 @@ async function generarPDF() {
                     pdf.setFontSize(8.5);
                 }
             }
-
+ 
             currentY += lineHeight/2;
             pdf.setDrawColor(200, 200, 200);
             pdf.line(x + 4, currentY - 2, x + boletaWidth - 4, currentY - 2);
-
-            // Monto Final
+ 
+            // Monto final
             pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(9);
-            drawAmountWithDots(pdf, 'TOTAL A RECIBIR:', montoFinalDecrypt, x, currentY, boletaWidth);
-
-            // Sección de firmas
-            const firmaY1 = y + boletaHeight - 18; // Posición Y para las firmas superiores
-            const firmaY2 = y + boletaHeight - 8;  // Posición Y para la firma inferior
-            const firmaWidth = (boletaWidth - 12) / 2; // Ancho para las firmas superiores
-
+            drawAmountWithDots('TOTAL A RECIBIR:', montoFinalDecrypt, currentY);
+ 
+            // Firmas
+            const firmaWidth = (boletaWidth - 12) / 2;
+            const firmaY1 = y + boletaHeight - 18;
+            const firmaY2 = y + boletaHeight - 8;
+ 
             pdf.setFontSize(6.5);
-
-            // Primera firma superior (izquierda) - Colaborador
+            
+            // Firmas superiores
             pdf.line(x + 4, firmaY1, x + firmaWidth - 1, firmaY1);
-            pdf.text('Firma Colaborador', x + 4, firmaY1 + 2);
-
-            // Segunda firma superior (derecha) - Jefe de Área
+            pdf.text('Firma Colaborador', x + (firmaWidth/2), firmaY1 + 2, { align: 'center' });
+ 
             pdf.line(x + firmaWidth + 5, firmaY1, x + boletaWidth - 4, firmaY1);
-            pdf.text('Firma Jefe de Área', x + firmaWidth + 5, firmaY1 + 2);
-
-            // Tercera firma (centro abajo) - Encargado
+            pdf.text('Firma Jefe de Área', x + firmaWidth + 5 + (firmaWidth/2), firmaY1 + 2, { align: 'center' });
+            // Firma inferior
             const firmaInferiorWidth = boletaWidth * 0.6;
             const firmaInferiorX = x + (boletaWidth - firmaInferiorWidth) / 2;
             pdf.line(firmaInferiorX, firmaY2, firmaInferiorX + firmaInferiorWidth, firmaY2);
             pdf.text('Firma Encargado', firmaInferiorX + (firmaInferiorWidth/2) - 10, firmaY2 + 2);
-
+ 
             // Marcas de corte
             const longitudCorte = 3;
             pdf.setDrawColor(150, 150, 150);
             pdf.setLineWidth(0.1);
-
-            // Esquina superior izquierda
-            pdf.line(x, y, x + longitudCorte, y);
-            pdf.line(x, y, x, y + longitudCorte);
-
-            // Esquina superior derecha
-            pdf.line(x + boletaWidth - longitudCorte, y, x + boletaWidth, y);
-            pdf.line(x + boletaWidth, y, x + boletaWidth, y + longitudCorte);
-
-            // Esquina inferior izquierda
-            pdf.line(x, y + boletaHeight, x + longitudCorte, y + boletaHeight);
-            pdf.line(x, y + boletaHeight - longitudCorte, x, y + boletaHeight);
-
-            // Esquina inferior derecha
-            pdf.line(x + boletaWidth - longitudCorte, y + boletaHeight, x + boletaWidth, y + boletaHeight);
-            pdf.line(x + boletaWidth, y + boletaHeight - longitudCorte, x + boletaWidth, y + boletaHeight);
+ 
+            // Esquinas
+            [
+                [x, y, x + longitudCorte, y],
+                [x, y, x, y + longitudCorte],
+                [x + boletaWidth - longitudCorte, y, x + boletaWidth, y],
+                [x + boletaWidth, y, x + boletaWidth, y + longitudCorte],
+                [x, y + boletaHeight, x + longitudCorte, y + boletaHeight],
+                [x, y + boletaHeight - longitudCorte, x, y + boletaHeight],
+                [x + boletaWidth - longitudCorte, y + boletaHeight, x + boletaWidth, y + boletaHeight],
+                [x + boletaWidth, y + boletaHeight - longitudCorte, x + boletaWidth, y + boletaHeight]
+            ].forEach(([x1, y1, x2, y2]) => pdf.line(x1, y1, x2, y2));
         }
-
-        // Guardar el PDF
-        pdf.save(`Boletas_Bonificacion_${departamento}_${mesBonificacion}.pdf`);
+        try {
+            const currentDate = new Date();
+            const fechaEntrega = currentDate.toISOString().split('T')[0];
+            const fechaHoraEntrega = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+            
+            // Actualizar estado en Bonificaciones
+            await connection.query(
+                'UPDATE Bonificaciones SET Estado = 4 WHERE IdBonificacion = ?',
+                [currentBonificacionId]
+            );
+        
+            // Actualizar DetalleBonificaciones
+            await connection.query(
+                `UPDATE DetalleBonificaciones 
+                 SET IdPersonaEntrego = ?,
+                     FechaEntrega = ?,
+                     FechaHoraEntrego = ?
+                 WHERE IdBonificacion = ?`,
+                [userData.Id, fechaEntrega, fechaHoraEntrega, currentBonificacionId]
+            );
+        
+            await connection.close();
+        } catch (error) {
+            console.error('Error al actualizar la base de datos:', error);
+            throw error;
+        }
+        pdf.save(`Bonificacion_${departamento}_${mesFormateado}.pdf`);
         document.getElementById('loadingSpinner').style.display = 'none';
         await Swal.fire({
             icon: 'success',
             title: 'PDF Generado',
             text: 'Las boletas han sido generadas exitosamente'
         });
-
+ 
     } catch (error) {
         console.error('Error al generar PDF:', error);
         document.getElementById('loadingSpinner').style.display = 'none';
@@ -653,7 +767,25 @@ async function generarPDF() {
             text: 'No se pudieron generar las boletas PDF'
         });
     }
+ }
+//Funcion para mostrar y ocultar montos
+function toggleMonto(button) {
+    const montoContainer = button.closest('.personal-monto');
+    const montoValue = montoContainer.querySelector('.monto-value');
+    const montoHidden = montoContainer.querySelector('.monto-hidden');
+    const icon = button.querySelector('i');
+
+    if (montoValue.style.display === 'none') {
+        montoValue.style.display = 'inline';
+        montoHidden.style.display = 'none';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        montoValue.style.display = 'none';
+        montoHidden.style.display = 'inline';
+        icon.className = 'fas fa-eye';
+    }
 }
+
 // Cargar la información cuando el documento esté listo
 document.addEventListener('DOMContentLoaded', () => {
     cargarInformacionBonificacion();

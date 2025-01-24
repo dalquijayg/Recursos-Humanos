@@ -167,3 +167,26 @@ body {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     min-height: 500px;
 }
+.toggle-menu {
+    position: absolute;
+    right: -40px;
+    top: 10px;
+    background: var(--primary-color);
+    border: none;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 0 5px 5px 0;
+}
+
+.sidebar.collapsed {
+    transform: translateX(-280px);
+}
+
+.main-content.expanded {
+    margin-left: 0;
+}
+
+.sidebar, .main-content {
+    transition: all 0.3s ease;
+}

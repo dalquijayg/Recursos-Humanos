@@ -60,60 +60,6 @@ function open_Adicionales() {
         ventanaboni = null;
     });
 }
-function open_Autorizaciones() {
-    // Verificar si la ventana ya está abierta
-    if (ventanaautoboni) {
-        if (ventanaautoboni.isMinimized()) ventanaautoboni.restore(); // Restaurar si está minimizada
-        ventanaautoboni.focus(); // Enfocar si ya está abierta
-        return;
-    }
-
-    // Crear una nueva ventana
-    ventanaautoboni = new BrowserWindow({
-        parent: mainWindow, // Hace que sea ventana hija de Home.html
-        modal: false,
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
-        },
-        icon: path.join(__dirname, 'Logo-Recursos.ico'),
-        autoHideMenuBar: true
-    });
-    ventanaautoboni.maximize();
-    ventanaautoboni.loadURL(`file://${__dirname}/Vistas/AutorizacionBoni.html`);
-
-    // Manejar el evento de cierre para liberar la referencia
-    ventanaautoboni.on('closed', () => {
-        ventanaautoboni = null;
-    });
-}
-function open_Entrega() {
-    // Verificar si la ventana ya está abierta
-    if (ventanaEntregas) {
-        if (ventanaEntregas.isMinimized()) ventanaEntregas.restore(); // Restaurar si está minimizada
-        ventanaEntregas.focus(); // Enfocar si ya está abierta
-        return;
-    }
-
-    // Crear una nueva ventana
-    ventanaEntregas = new BrowserWindow({
-        parent: mainWindow, // Hace que sea ventana hija de Home.html
-        modal: false,
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
-        },
-        icon: path.join(__dirname, 'Logo-Recursos.ico'),
-        autoHideMenuBar: true
-    });
-    ventanaEntregas.maximize();
-    ventanaEntregas.loadURL(`file://${__dirname}/Vistas/EntregaBoni.html`);
-
-    // Manejar el evento de cierre para liberar la referencia
-    ventanaEntregas.on('closed', () => {
-        ventanaEntregas = null;
-    });
-}
 app.on('ready', createWindow);
 ipcMain.on('open_adicionales', () => {
     open_Adicionales();

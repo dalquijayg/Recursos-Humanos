@@ -106,69 +106,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
-    document.getElementById('autorizacionboni').addEventListener('click', async (e) => {
-        e.preventDefault();
-        const userData = JSON.parse(localStorage.getItem('userData'));
-        
-        try {
-            const connection = await connectionString();
-            const result = await connection.query(
-                'SELECT COUNT(*) as tiene_permiso FROM TransaccionesRRHH WHERE IdPersonal = ? AND Codigo = ?', 
-                [userData.Id, '108']
-            );
-            await connection.close();
-    
-            if (result[0].tiene_permiso > 0) {
-                ipcRenderer.send('open_Autorizaciones');
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Acceso Denegado',
-                    text: 'No tiene autorización para acceder a esta función. Transaccion 108'
-                });
-            }
-        } catch (error) {
-            console.error('Error al verificar permisos:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Error al verificar los permisos de usuario'
-            });
-        }
-    });
-    document.getElementById('Entregaboni').addEventListener('click', async (e) => {
-        e.preventDefault();
-        const userData = JSON.parse(localStorage.getItem('userData'));
-        
-        try {
-            const connection = await connectionString();
-            const result = await connection.query(
-                'SELECT COUNT(*) as tiene_permiso FROM TransaccionesRRHH WHERE IdPersonal = ? AND Codigo = ?', 
-                [userData.Id, '109']
-            );
-            await connection.close();
-    
-            if (result[0].tiene_permiso > 0) {
-                ipcRenderer.send('open_Entregas');
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Acceso Denegado',
-                    text: 'No tiene autorización para acceder a esta función. Transaccion 109'
-                });
-            }
-        } catch (error) {
-            console.error('Error al verificar permisos:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Error al verificar los permisos de usuario'
-            });
-        }
-    });
     // Manejo del botón de cierre de sesión
     document.querySelector('.logout-btn').addEventListener('click', () => {
         localStorage.removeItem('userData');
         window.location.href = 'Autenticacion.html';
+    });
+    document.getElementById('toggleMenu').addEventListener('click', () => {
+        document.querySelector('.sidebar').classList.toggle('collapsed');
+        document.querySelector('.main-content').classList.toggle('expanded');
     });
 });

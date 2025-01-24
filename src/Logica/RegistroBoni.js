@@ -91,8 +91,7 @@ document.getElementById('loadButton').addEventListener('click', async () => {
             await Swal.fire({
                 title: 'Proceso en Auditoría',
                 html: `
-                    <p>Existe una transacción finalizada en espera de la confirmación de Auditoría 
-                    o verifique si ya fue Autorizada en el mes de ${mesSeleccionado}/${yearSeleccionado}.</p>
+                    <p>Existe una transacción finalizada en el mes de ${mesSeleccionado}/${yearSeleccionado}.</p>
                     <p>ID de Bonificación: <strong>${pendingAuditoria[0].IdBonificacion}</strong></p>
                 `,
                 icon: 'warning'
@@ -235,7 +234,7 @@ function formatearMes(mesSeleccionado, yearSeleccionado) {
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
     ];
-    return `${meses[parseInt(mesSeleccionado)]} ${yearSeleccionado}`;
+    return `${meses[parseInt(mesSeleccionado) - 1]} ${yearSeleccionado}`;
 }
 
 function populateCardsWithData(data, idBonificacion) {
@@ -490,13 +489,6 @@ async function guardarBonificacion(idPersonal, idBonificacion) {
         // Cambiar el botón a estado guardado
         saveButton.innerHTML = '<i class="fas fa-check-circle"></i> Guardado';
         saveButton.classList.add('saved');
-        await Swal.fire({
-            title: 'Éxito',
-            text: 'Bonificación guardada correctamente',
-            icon: 'success',
-            timer: 1500,
-            showConfirmButton: false
-        });
         const row = saveButton.closest('tr');
         if (row) {
             row.classList.add('row-saved');
@@ -772,8 +764,6 @@ async function generarPDF() {
             }
 
             currentY += lineHeight/2;
-            pdf.setDrawColor(200, 200, 200);
-            pdf.line(x + 4, currentY - 2, x + boletaWidth - 4, currentY - 2);
 
             // Monto Final
             pdf.setFont('helvetica', 'bold');
@@ -790,7 +780,7 @@ async function generarPDF() {
             // Primera firma superior (izquierda) - Colaborador
             pdf.line(x + 4, firmaY1, x + firmaWidth - 1, firmaY1);
             pdf.text('Firma Colaborador', x + 4, firmaY1 + 2);
-
+            
             // Segunda firma superior (derecha) - Jefe de Área
             pdf.line(x + firmaWidth + 5, firmaY1, x + boletaWidth - 4, firmaY1);
             pdf.text('Firma Jefe de Área', x + firmaWidth + 5, firmaY1 + 2);
@@ -800,7 +790,7 @@ async function generarPDF() {
             const firmaInferiorX = x + (boletaWidth - firmaInferiorWidth) / 2;
             pdf.line(firmaInferiorX, firmaY2, firmaInferiorX + firmaInferiorWidth, firmaY2);
             pdf.text('Firma Encargado', firmaInferiorX + (firmaInferiorWidth/2) - 10, firmaY2 + 2);
-
+            pdf.text('Fecha recibido: ____/____/______', firmaInferiorX + (firmaInferiorWidth/2) - 20, firmaY2 + 6);
             // Marcas de corte
             const longitudCorte = 3;
             pdf.setDrawColor(150, 150, 150);
@@ -866,6 +856,7 @@ async function generarPDFResumen(idBonificacion) {
     try {
         const { jsPDF } = window.jspdf;
         const connection = await connectionString();
+        const userData = JSON.parse(localStorage.getItem('userData'));
         
         const query = `
             SELECT 
@@ -882,7 +873,8 @@ async function generarPDFResumen(idBonificacion) {
         const result = await connection.query(query, [idBonificacion]);
         const data = result[0];
         const montoTotal = parseFloat(decrypt(data.MontoTotal));
-        
+
+        const serie = `${data.Departamento.split(' ').map(word => word.substring(0, 3)).join('')}-${data.IdBonificacion}`;
         const pdf = new jsPDF();
         
         // Encabezado con estilo
@@ -912,11 +904,13 @@ async function generarPDFResumen(idBonificacion) {
         pdf.setFont('helvetica', 'bold');
         
         const info = [
+            ['Serie:', serie],
             ['ID Bonificación:', data.IdBonificacion.toString()],
             ['Departamento:', data.Departamento],
             ['Mes:', formatearMes(data.Mes.split('-')[1], data.Mes.split('-')[0])],
             ['Monto Total:', `Q ${montoTotal.toLocaleString('es-GT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`],
-            ['Fecha y Hora:', fechaFormateada]
+            ['Fecha y Hora:', fechaFormateada],
+            ['Usuario:', userData.NombreCompleto]
         ];
         
         let y = 55;
@@ -937,15 +931,18 @@ async function generarPDFResumen(idBonificacion) {
         pdf.setLineWidth(0.5);
         pdf.line(30, 190, 100, 190);
         pdf.line(120, 190, 190, 190);
+        pdf.line(75, 205, 145, 205); 
         
         pdf.setFontSize(10);
-        pdf.text('Firma Entregó', 45, 195);
-        pdf.text('Firma de Testigo', 140, 195);
+        pdf.text('Firma Entrega', 45, 195);
+        pdf.text('Firma Entrega', 140, 195);
+        pdf.text('Firma Gerente Regional', 85, 210);
         
         pdf.setFontSize(8);
         pdf.setTextColor(128, 128, 128);
-        pdf.text('Encargado de Departamento', 45, 200);
-        pdf.text('Gerente de Departamento', 140, 200);
+        pdf.text('Gerente Departamento', 45, 200);
+        pdf.text('Sub-Gerente Departamento', 140, 200);
+        
         
         // Footer
         pdf.setFillColor(51, 51, 51);

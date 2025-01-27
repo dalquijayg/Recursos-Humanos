@@ -648,7 +648,7 @@ async function generarPDF() {
             bonificacionInfo[0].Mes.split('-')[1], 
             bonificacionInfo[0].Mes.split('-')[0]
         );
-        // Consulta SQL
+
         const query = `
             SELECT
                 CONCAT(personal.Primer_Nombre, ' ', 
@@ -673,33 +673,22 @@ async function generarPDF() {
 
         const personal = await connection.query(query, [currentBonificacionId]);
 
-        // Configurar el PDF
         const pdf = new jsPDF({
-            orientation: 'portrait',
+            orientation: 'landscape',
             unit: 'mm',
             format: 'letter'
         });
 
-        // Función para mostrar monto con línea punteada
-        function drawAmountWithDots(pdf, label, amount, x, y, width) {
-            const dotStartX = x + 50; // Posición donde empiezan los puntos
-            const amountText = `Q ${amount.toLocaleString('es-GT', { minimumFractionDigits: 2 })}`;
-            
-            pdf.text(label, x + 4, y);
-            pdf.text(amountText, x + width - 4, y, { align: 'right' });
-        }
-
-        // Ajustar dimensiones para 6 boletas pegadas
-        const marginX = 10;
-        const marginY = 10;
-        const boletaWidth = 98;
-        const boletaHeight = 86;
+        // Configuración de dimensiones ajustadas
+        const marginX = 8;
+        const marginY = 8;
+        const boletaWidth = 136;
+        const boletaHeight = 100;
         const columnas = 2;
-        const filas = 3;
+        const filas = 2;
         const espacioX = 0;
         const espacioY = 0;
 
-        let currentPage = 0;
         const boletasPorPagina = columnas * filas;
 
         for (let i = 0; i < personal.length; i++) {
@@ -711,11 +700,10 @@ async function generarPDF() {
 
             if (posicionEnPagina === 0 && i > 0) {
                 pdf.addPage();
-                currentPage++;
             }
 
-            const x = marginX + columna * (boletaWidth + espacioX);
-            const y = marginY + fila * (boletaHeight + espacioY);
+            const x = marginX + columna * boletaWidth;
+            const y = marginY + fila * boletaHeight;
 
             // Obtener datos y desencriptar montos
             const puesto = await obtenerPuestoEmpleado(persona.IdUsuario);
@@ -724,127 +712,102 @@ async function generarPDF() {
             const descuentoCreditosDecrypt = parseFloat(decrypt(persona.DescuentoCreditos || '0'));
             const montoFinalDecrypt = parseFloat(decrypt(persona.Monto || '0'));
 
-            // Dibujar boleta
-            pdf.setDrawColor(200, 200, 200);
+            // Marco de la boleta
+            pdf.setDrawColor(0, 0, 0);
+            pdf.setLineWidth(0.3);
             pdf.rect(x, y, boletaWidth, boletaHeight);
-            pdf.setFillColor(240, 240, 240);
-            pdf.rect(x, y, boletaWidth, 8, 'F');
 
             // Título
+            pdf.setFillColor(240, 240, 240);
+            pdf.rect(x, y, boletaWidth, 8, 'F');
             pdf.setFont('helvetica', 'bold');
-            pdf.setFontSize(10);
-            pdf.text('COMPLEMENTO', x + boletaWidth/2, y + 5, { align: 'center' });
+            pdf.setFontSize(12);
+            pdf.text('COMPLEMENTO', x + boletaWidth/2, y + 6, { align: 'center' });
 
             // Información principal
             pdf.setFont('helvetica', 'normal');
-            pdf.setFontSize(8);
-            let currentY = y + 12;
-            const lineHeight = 4.5;
+            pdf.setFontSize(12);
+            let currentY = y + 15;
+            const lineHeight = 6;
 
             // Información básica
-            pdf.text(`Departamento: ${departamento}             Id Boleta: ${persona.Iddetallebonificaciones}`, x + 4, currentY);
+            pdf.text(`Departamento: ${departamento}    ID Boleta: ${persona.Iddetallebonificaciones}`, x + 5, currentY);
             currentY += lineHeight;
-            pdf.text(`Puesto: ${puesto}`, x + 4, currentY);
+            
+            pdf.text(`Colaborador: ${persona.NombreColaborador}`, x + 5, currentY);
             currentY += lineHeight;
-            pdf.text(`Colaborador: ${persona.NombreColaborador}`, x + 4, currentY);
+            
+            pdf.text(`Puesto: ${puesto}`, x + 5, currentY);
             currentY += lineHeight;
-            pdf.text(`Mes: ${mesBonificacion}`, x + 4, currentY);
-            currentY += lineHeight * 1.5;
+            
+            pdf.text(`Mes: ${mesBonificacion}`, x + 5, currentY);
+            currentY += lineHeight + 3;
 
-            // Desglose de montos con líneas punteadas
+            // Desglose de montos
+            pdf.setFontSize(10);
             pdf.setFont('helvetica', 'bold');
-            pdf.setFontSize(8.5);
-            drawAmountWithDots(pdf, 'Monto Inicial:', montoInicialDecrypt, x, currentY, boletaWidth);
+            pdf.text(`Monto Inicial:`, x + 5, currentY);
+            pdf.text(`Q ${montoInicialDecrypt.toLocaleString('es-GT', { minimumFractionDigits: 2 })}`, x + boletaWidth - 5, currentY, { align: 'right' });
             currentY += lineHeight;
 
-            pdf.setFont('helvetica', 'normal');
             if (descuentoAuditoriaDecrypt > 0) {
-                drawAmountWithDots(pdf, '(-) Descuento Auditoría:', descuentoAuditoriaDecrypt, x, currentY, boletaWidth);
+                pdf.setFont('helvetica', 'normal');
+                pdf.text(`(-) Descuento Auditoría:`, x + 5, currentY);
+                pdf.text(`Q ${descuentoAuditoriaDecrypt.toLocaleString('es-GT', { minimumFractionDigits: 2 })}`, x + boletaWidth - 5, currentY, { align: 'right' });
                 currentY += lineHeight;
-
+                
                 if (persona.ObservacionAuditoria) {
-                    pdf.setFontSize(7);
-                    const observacionLines = pdf.splitTextToSize(
-                        `Nota: ${persona.ObservacionAuditoria}`, 
-                        boletaWidth - 10
-                    );
-                    observacionLines.forEach(line => {
-                        pdf.text(line, x + 4, currentY);
-                        currentY += 3;
-                    });
-                    pdf.setFontSize(8.5);
+                    pdf.setFontSize(9);
+                    pdf.text(`Nota: ${persona.ObservacionAuditoria}`, x + 10, currentY);
+                    currentY += lineHeight;
                 }
             }
 
             if (descuentoCreditosDecrypt > 0) {
-                drawAmountWithDots(pdf, '(-) Descuento Créditos:', descuentoCreditosDecrypt, x, currentY, boletaWidth);
+                pdf.setFont('helvetica', 'normal');
+                pdf.setFontSize(10);
+                pdf.text(`(-) Descuento Créditos:`, x + 5, currentY);
+                pdf.text(`Q ${descuentoCreditosDecrypt.toLocaleString('es-GT', { minimumFractionDigits: 2 })}`, x + boletaWidth - 5, currentY, { align: 'right' });
                 currentY += lineHeight;
-
+                
                 if (persona.ObservacionCreditos) {
-                    pdf.setFontSize(7);
-                    const observacionLines = pdf.splitTextToSize(
-                        `No. Vale: ${persona.ObservacionCreditos}`, 
-                        boletaWidth - 10
-                    );
-                    observacionLines.forEach(line => {
-                        pdf.text(line, x + 4, currentY);
-                        currentY += 3;
-                    });
-                    pdf.setFontSize(8.5);
+                    pdf.setFontSize(9);
+                    pdf.text(`No. Vale: ${persona.ObservacionCreditos}`, x + 10, currentY);
+                    currentY += lineHeight;
                 }
             }
 
-            currentY += lineHeight/2;
-
-            // Monto Final
+            currentY += 2;
+            pdf.setDrawColor(0, 0, 0);
+            const lineaInicio = x + (boletaWidth/2); // Empieza desde la mitad
+            pdf.line(lineaInicio, currentY, x + boletaWidth - 5, currentY);
+            currentY += lineHeight;
+            // Total
             pdf.setFont('helvetica', 'bold');
-            pdf.setFontSize(9);
-            drawAmountWithDots(pdf, 'TOTAL A RECIBIR:', montoFinalDecrypt, x, currentY, boletaWidth);
+            pdf.setFontSize(11);
+            pdf.text('TOTAL A RECIBIR:', x + 5, currentY);
+            pdf.text(`Q ${montoFinalDecrypt.toLocaleString('es-GT', { minimumFractionDigits: 2 })}`, x + boletaWidth - 5, currentY, { align: 'right' });
 
             // Sección de firmas
-            const firmaY1 = y + boletaHeight - 18; // Posición Y para las firmas superiores
-            const firmaY2 = y + boletaHeight - 8;  // Posición Y para la firma inferior
-            const firmaWidth = (boletaWidth - 12) / 2; // Ancho para las firmas superiores
+            const firmaY = y + boletaHeight - 15;
+            pdf.setFontSize(9);
+            pdf.setFont('helvetica', 'normal');
 
-            pdf.setFontSize(6.5);
-
-            // Primera firma superior (izquierda) - Colaborador
-            pdf.line(x + 4, firmaY1, x + firmaWidth - 1, firmaY1);
-            pdf.text('Firma Colaborador', x + 4, firmaY1 + 2);
+            // Líneas de firma
+            const anchoFirma = (boletaWidth - 20) / 3;
             
-            // Segunda firma superior (derecha) - Jefe de Área
-            pdf.line(x + firmaWidth + 5, firmaY1, x + boletaWidth - 4, firmaY1);
-            pdf.text('Firma Jefe de Área', x + firmaWidth + 5, firmaY1 + 2);
+            pdf.line(x + 5, firmaY, x + anchoFirma, firmaY);
+            pdf.text('Firma Colaborador', x + 5, firmaY + 4);
+            
+            pdf.line(x + anchoFirma + 10, firmaY, x + (anchoFirma * 2), firmaY);
+            pdf.text('Firma Jefe de Área', x + anchoFirma + 10, firmaY + 4);
+            
+            pdf.line(x + (anchoFirma * 2) + 10, firmaY, x + boletaWidth - 5, firmaY);
+            pdf.text('Firma Encargado', x + (anchoFirma * 2) + 10, firmaY + 4);
 
-            // Tercera firma (centro abajo) - Encargado
-            const firmaInferiorWidth = boletaWidth * 0.6;
-            const firmaInferiorX = x + (boletaWidth - firmaInferiorWidth) / 2;
-            pdf.line(firmaInferiorX, firmaY2, firmaInferiorX + firmaInferiorWidth, firmaY2);
-            pdf.text('Firma Encargado', firmaInferiorX + (firmaInferiorWidth/2) - 10, firmaY2 + 2);
-            pdf.text('Fecha recibido: ____/____/______', firmaInferiorX + (firmaInferiorWidth/2) - 20, firmaY2 + 6);
-            // Marcas de corte
-            const longitudCorte = 3;
-            pdf.setDrawColor(150, 150, 150);
-            pdf.setLineWidth(0.1);
-
-            // Esquina superior izquierda
-            pdf.line(x, y, x + longitudCorte, y);
-            pdf.line(x, y, x, y + longitudCorte);
-
-            // Esquina superior derecha
-            pdf.line(x + boletaWidth - longitudCorte, y, x + boletaWidth, y);
-            pdf.line(x + boletaWidth, y, x + boletaWidth, y + longitudCorte);
-
-            // Esquina inferior izquierda
-            pdf.line(x, y + boletaHeight, x + longitudCorte, y + boletaHeight);
-            pdf.line(x, y + boletaHeight - longitudCorte, x, y + boletaHeight);
-
-            // Esquina inferior derecha
-            pdf.line(x + boletaWidth - longitudCorte, y + boletaHeight, x + boletaWidth, y + boletaHeight);
-            pdf.line(x + boletaWidth, y + boletaHeight - longitudCorte, x + boletaWidth, y + boletaHeight);
+            pdf.text('Fecha recibido: ____/____/______', x + boletaWidth/2 - 25, firmaY + 12);
         }
 
-        // Guardar el PDF
         pdf.save(`Boletas_Bonificacion_${departamento}_${mesBonificacion}.pdf`);
         document.getElementById('loadingSpinner').style.display = 'none';
         await Swal.fire({

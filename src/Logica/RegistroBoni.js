@@ -74,11 +74,12 @@ document.getElementById('loadButton').addEventListener('click', async () => {
 
         // Primera validación: Verificar si hay una transacción en proceso de auditoría
         const checkAuditoriaQuery = `
-            SELECT IdBonificacion 
-            FROM Bonificaciones 
-            WHERE IdDepartamento = ? 
-            AND Mes = ?
-            AND Estado IN (1, 2, 3, 4)
+            SELECT B.IdBonificacion, B.Estado, B.MontoTotal,
+                   (SELECT COUNT(*) FROM DetalleBonificaciones WHERE IdBonificacion = B.IdBonificacion) as TotalPersonal
+            FROM Bonificaciones B
+            WHERE B.IdDepartamento = ? 
+            AND B.Mes = ?
+            AND B.Estado IN (1, 2, 3, 4)
             LIMIT 1
         `;
         const pendingAuditoria = await connection.query(checkAuditoriaQuery, [
@@ -87,16 +88,45 @@ document.getElementById('loadButton').addEventListener('click', async () => {
         ]);
 
         if (pendingAuditoria && pendingAuditoria.length > 0) {
-            await connection.close();
-            await Swal.fire({
-                title: 'Proceso en Auditoría',
-                html: `
-                    <p>Existe una transacción finalizada en el mes de ${mesSeleccionado}/${yearSeleccionado}.</p>
-                    <p>ID de Bonificación: <strong>${pendingAuditoria[0].IdBonificacion}</strong></p>
-                `,
-                icon: 'warning'
-            });
-            return;
+            const bonificacion = pendingAuditoria[0];
+            
+            // Si el estado es 1, mostrar la información y permitir finalizar entrega
+            if (bonificacion.Estado === 1) {
+                document.getElementById('totalPersonal').textContent = bonificacion.TotalPersonal;
+                document.getElementById('idBonificacion').textContent = bonificacion.IdBonificacion;
+                document.getElementById('montoTotal').textContent = decrypt(bonificacion.MontoTotal);
+                
+                // Ocultar botón de finalizar registro y mostrar botón de finalizar entrega
+                document.getElementById('finalizarBtn').style.display = 'none';
+                
+                const container = document.querySelector('.info-summary');
+                if (!document.querySelector('.btn-finalizar-entrega')) {
+                    const finalizarEntregaBtn = document.createElement('button');
+                    finalizarEntregaBtn.className = 'btn-finalizar-entrega';
+                    finalizarEntregaBtn.innerHTML = '<i class="fas fa-file-pdf"></i> Finalizar Entrega';
+                    finalizarEntregaBtn.onclick = () => generarPDFResumen(bonificacion.IdBonificacion);
+                    container.appendChild(finalizarEntregaBtn);
+                }
+                
+                await connection.close();
+                // Cerrar el loader
+                await loader.close();
+                return;
+            } 
+            // Para otros estados (2,3,4) mostrar mensaje de advertencia
+            else {
+                await connection.close();
+                await Swal.fire({
+                    title: 'Proceso en Auditoría',
+                    html: `
+                        <p>Existe una transacción que ya está en proceso de auditoría 
+                        o ha sido autorizada para el mes de ${mesSeleccionado}/${yearSeleccionado}.</p>
+                        <p>ID de Bonificación: <strong>${bonificacion.IdBonificacion}</strong></p>
+                    `,
+                    icon: 'warning'
+                });
+                return;
+            }
         }
         // Consulta para verificar si ya existe un registro
         const checkExistingQuery = `
@@ -625,6 +655,7 @@ async function generarPDF() {
                       IFNULL(personal.Segundo_Nombre, ''), ' ', 
                       personal.Primer_Apellido, ' ', 
                       IFNULL(personal.Segundo_Apellido, '')) AS NombreColaborador,
+                DetalleBonificaciones.Iddetallebonificaciones,
                 DetalleBonificaciones.Monto,
                 DetalleBonificaciones.MontoInicial,
                 DetalleBonificaciones.DescuentoAuditoria,
@@ -702,7 +733,7 @@ async function generarPDF() {
             // Título
             pdf.setFont('helvetica', 'bold');
             pdf.setFontSize(10);
-            pdf.text('BOLETA DE BONIFICACIÓN', x + boletaWidth/2, y + 5, { align: 'center' });
+            pdf.text('COMPLEMENTO', x + boletaWidth/2, y + 5, { align: 'center' });
 
             // Información principal
             pdf.setFont('helvetica', 'normal');
@@ -711,7 +742,7 @@ async function generarPDF() {
             const lineHeight = 4.5;
 
             // Información básica
-            pdf.text(`Departamento: ${departamento}`, x + 4, currentY);
+            pdf.text(`Departamento: ${departamento}             Id Boleta: ${persona.Iddetallebonificaciones}`, x + 4, currentY);
             currentY += lineHeight;
             pdf.text(`Puesto: ${puesto}`, x + 4, currentY);
             currentY += lineHeight;
@@ -864,7 +895,8 @@ async function generarPDFResumen(idBonificacion) {
                 B.MontoTotal,
                 B.Mes,
                 D.Nombre as Departamento,
-                B.FechahoraGenerado
+                B.FechahoraGenerado,
+                (SELECT COUNT(*) FROM DetalleBonificaciones WHERE IdBonificacion = B.IdBonificacion) as CantidadColaboradores
             FROM Bonificaciones B
             INNER JOIN departamentos D ON B.IdDepartamento = D.Id_Departamento
             WHERE B.IdBonificacion = ?
@@ -888,10 +920,15 @@ async function generarPDFResumen(idBonificacion) {
         // Restaurar color de texto
         pdf.setTextColor(0, 0, 0);
         
-        // Crear tarjeta de información
+        // Crear tarjeta de información principal
         pdf.setFillColor(249, 250, 251);
         pdf.setDrawColor(230, 230, 230);
-        pdf.roundedRect(20, 40, 170, 100, 3, 3, 'FD');
+        pdf.roundedRect(20, 40, 170, 120, 3, 3, 'FD');
+        
+        // Añadir línea decorativa debajo del título
+        pdf.setDrawColor(200, 200, 200);
+        pdf.setLineWidth(0.5);
+        pdf.line(25, 45, 185, 45);
         
         // Formatear fecha
         const fecha = new Date(data.FechahoraGenerado);
@@ -899,50 +936,71 @@ async function generarPDFResumen(idBonificacion) {
         const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         const fechaFormateada = `${diasSemana[fecha.getDay()]}, ${fecha.getDate()} de ${meses[fecha.getMonth()]} de ${fecha.getFullYear()}, ${fecha.toLocaleTimeString('es-GT')}`;
         
-        // Información con estilo
-        pdf.setFontSize(12);
-        pdf.setFont('helvetica', 'bold');
-        
         const info = [
             ['Serie:', serie],
             ['ID Bonificación:', data.IdBonificacion.toString()],
             ['Departamento:', data.Departamento],
             ['Mes:', formatearMes(data.Mes.split('-')[1], data.Mes.split('-')[0])],
+            ['Cantidad de Colaboradores:', data.CantidadColaboradores.toString()],
             ['Monto Total:', `Q ${montoTotal.toLocaleString('es-GT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`],
             ['Fecha y Hora:', fechaFormateada],
             ['Usuario:', userData.NombreCompleto]
         ];
         
-        let y = 55;
+        let y = 60;
         info.forEach(([label, value]) => {
+            // Fondo alterno para mejor legibilidad
+            if ((y - 60) / 15 % 2 === 0) {
+                pdf.setFillColor(245, 247, 250);
+                pdf.rect(25, y - 5, 160, 10, 'F');
+            }
+            
             pdf.setFont('helvetica', 'bold');
-            pdf.text(label, 30, y);
+            pdf.setFontSize(10);
+            pdf.setTextColor(60, 60, 60);
+            pdf.text(label, 35, y);
+            
             pdf.setFont('helvetica', 'normal');
-            pdf.text(value, 90, y);
+            pdf.setTextColor(0, 0, 0);
+            pdf.text(value, 95, y);
+            
             y += 15;
         });
         
-        // Área de firmas con estilo
+        // Área de firmas con estilo mejorado
         pdf.setFillColor(249, 250, 251);
-        pdf.roundedRect(20, 160, 170, 60, 3, 3, 'FD');
+        pdf.roundedRect(20, 170, 170, 80, 3, 3, 'FD');
         
-        // Líneas de firma
-        pdf.setDrawColor(200, 200, 200);
-        pdf.setLineWidth(0.5);
-        pdf.line(30, 190, 100, 190);
-        pdf.line(120, 190, 190, 190);
-        pdf.line(75, 205, 145, 205); 
-        
-        pdf.setFontSize(10);
-        pdf.text('Firma Entrega', 45, 195);
-        pdf.text('Firma Entrega', 140, 195);
-        pdf.text('Firma Gerente Regional', 85, 210);
-        
+        // Título de sección de firmas
+        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(11);
+        pdf.setTextColor(0, 0, 0); // Cambiado a negro puro
+        pdf.text('AUTORIZACIONES', 105, 185, { align: 'center' });
+
+        // Líneas de firma con mejor espaciado
+        pdf.setDrawColor(0, 0, 0); // Cambiado a negro puro para las líneas
+        pdf.setLineWidth(0.7); // Aumentado el grosor de las líneas
+
+        // Primera fila de firmas
+        pdf.line(35, 210, 95, 210);
+        pdf.line(115, 210, 175, 210);
+
+        // Segunda fila - firma central
+        pdf.line(75, 235, 135, 235);
+
+        // Textos de firma
+        pdf.setFontSize(9);
+        pdf.setFont('helvetica', 'bold');
+        pdf.setTextColor(0, 0, 0); // Cambiado a negro puro
+        pdf.text('Firma Entrega', 65, 215, { align: 'center' });
+        pdf.text('Firma Entrega', 145, 215, { align: 'center' });
+        pdf.text('Firma Gerente Regional', 105, 240, { align: 'center' });
+
         pdf.setFontSize(8);
-        pdf.setTextColor(128, 128, 128);
-        pdf.text('Gerente Departamento', 45, 200);
-        pdf.text('Sub-Gerente Departamento', 140, 200);
-        
+        pdf.setFont('helvetica', 'normal');
+        pdf.setTextColor(0, 0, 0); // Cambiado a negro puro para mejor visibilidad
+        pdf.text('Gerente Departamento', 65, 220, { align: 'center' });
+        pdf.text('Sub-Gerente Departamento', 145, 220, { align: 'center' });
         
         // Footer
         pdf.setFillColor(51, 51, 51);

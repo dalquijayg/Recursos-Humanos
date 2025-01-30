@@ -1,0 +1,300 @@
+:root {
+    --primary-color: #2C3E50;
+    --secondary-color: #3498DB;
+    --accent-color: #E74C3C;
+    --success-color: #2ECC71;
+    --warning-color: #F1C40F;
+    --info-color: #3498DB;
+    --text-color: #2C3E50;
+    --background-color: #F5F7FA;
+    --border-color: #E2E8F0;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+    min-height: 100vh;
+}
+
+.main-container {
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Header Section */
+.header-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    padding: 30px 20px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: var(--card-shadow);
+}
+
+.header-content {
+    text-align: center;
+    color: white;
+}
+
+.header-content h1 {
+    margin: 0;
+    font-size: 2.2em;
+    font-weight: 600;
+}
+
+.header-content .subtitle {
+    margin-top: 10px;
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+/* Filter Section */
+.filter-section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: var(--card-shadow);
+}
+
+.filters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.filter-group label {
+    color: var(--primary-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 150px;
+}
+
+.custom-select {
+    flex: 1;
+    padding: 10px 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    max-width: 400px;
+}
+
+.custom-select:focus {
+    border-color: var(--secondary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+/* Status Indicators */
+.status-indicators {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.status-badge {
+    background: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease;
+}
+
+.status-badge:hover {
+    transform: translateY(-2px);
+}
+
+.status-badge[data-status="pending"] {
+    border-left: 4px solid var(--warning-color);
+}
+
+.status-badge[data-status="authorized"] {
+    border-left: 4px solid var(--info-color);
+}
+
+.status-badge[data-status="completed"] {
+    border-left: 4px solid var(--success-color);
+}
+
+.status-badge .count {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+/* Results Section */
+.results-section {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--card-shadow);
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+#reporte-pagos-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#reporte-pagos-table th,
+#reporte-pagos-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#reporte-pagos-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+#reporte-pagos-table th i {
+    margin-right: 8px;
+}
+
+#reporte-pagos-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+#reporte-pagos-table tbody tr:hover {
+    background-color: #f8fafc;
+    transform: translateX(5px);
+}
+
+#reporte-pagos-table tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+/* Status Colors */
+.status-pending {
+    color: var(--warning-color);
+}
+
+.status-authorized {
+    color: var(--info-color);
+}
+
+.status-completed {
+    color: var(--success-color);
+}
+
+/* Loader */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--secondary-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+    margin-top: 15px;
+    color: var(--primary-color);
+    font-size: 1.1em;
+}
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-style: italic;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .main-container {
+        padding: 15px;
+    }
+
+    .filters-container {
+        flex-direction: column;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-group label {
+        min-width: auto;
+    }
+
+    .custom-select {
+        max-width: 100%;
+    }
+
+    .status-indicators {
+        justify-content: space-between;
+    }
+
+    .status-badge {
+        flex: 1;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content h1 {
+        font-size: 1.8em;
+    }
+
+    #reporte-pagos-table th,
+    #reporte-pagos-table td {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+
+    .status-indicators {
+        flex-direction: column;
+    }
+
+    .status-badge {
+        width: 100%;
+    }
+}

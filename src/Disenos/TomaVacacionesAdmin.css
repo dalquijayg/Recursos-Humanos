@@ -1,0 +1,450 @@
+:root {
+    --primary-color: #F2631C;
+    --primary-hover: #d14d0e;
+    --background-color: #f4f7f9;
+    --text-color: #2c3e50;
+    --border-color: #e0e5e9;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --white: #ffffff;
+    --success-color: #2ecc71;
+    --header-height: 70px;
+}
+
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* Loader */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.loader {
+    border: 3px solid var(--border-color);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Header de la página */
+.page-header {
+    background-color: var(--white);
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.page-header h1 {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Contenedor del dashboard */
+.dashboard-container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Barra de búsqueda */
+.search-container {
+    position: relative;
+    width: 400px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary-color);
+}
+
+#employee-search {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 2px solid var(--border-color);
+    border-radius: 25px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: var(--white);
+}
+
+#employee-search:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(242, 99, 28, 0.1);
+}
+
+/* Panel de empleados */
+.employee-panel {
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    margin: 0;
+    overflow: hidden;
+    width: 100%;
+}
+
+.panel-header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.panel-header h2 {
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+.panel-header:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Tabla de empleados */
+.table-responsive {
+    overflow-x: auto;
+}
+
+#employee-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0;
+}
+
+#employee-table th {
+    background-color: #f8f9fa;
+    color: var(--text-color);
+    font-weight: 600;
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--border-color);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#employee-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
+}
+
+#employee-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+#employee-table tbody tr:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+#employee-table tbody tr.selected {
+    background-color: rgba(242, 99, 28, 0.1);
+    border-left: 4px solid var(--primary-color);
+}
+
+#employee-table td.dias-disponibles {
+    text-align: center;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Panel del calendario */
+.calendar-panel {
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    margin: 2rem 0;
+    padding: 1rem;
+}
+
+.calendar-header {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.calendar-header h2 {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* Estilos del Calendario */
+#vacation-calendar {
+    background-color: var(--white);
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+
+.fc .fc-daygrid-day {
+    max-height: 130px !important;
+}
+
+.fc td {
+    height: 130px !important;
+}
+
+/* Cabecera del calendario */
+.fc-header-toolbar {
+    margin-bottom: 0.5em !important;
+    padding: 0 0.5em !important;
+}
+
+.fc-toolbar-title {
+    font-size: 1em !important;
+    color: var(--text-color) !important;
+}
+
+/* Encabezados de días */
+.fc-col-header-cell {
+    padding: 2px !important;
+    background-color: #f8f9fa !important;
+}
+
+.fc-col-header-cell-cushion {
+    font-size: 0.75em !important;
+    color: var(--text-color) !important;
+    text-decoration: none !important;
+    text-transform: lowercase !important;
+    font-weight: normal !important;
+    padding: 1px !important;
+}
+
+/* Números de los días */
+.fc .fc-daygrid-day-top {
+    justify-content: flex-start !important;
+    padding: 1px !important;
+}
+
+.fc .fc-daygrid-day-number {
+    font-size: 0.75em !important;
+    padding: 1px 3px !important;
+    margin: 0 !important;
+    color: var(--text-color) !important;
+    text-decoration: none !important;
+}
+
+/* Estilos para días especiales */
+.fc-day-sun, .fc-day-sat {
+    background-color: #ffebee !important;
+}
+
+.fc-day-today {
+    background-color: #e8f5e9 !important;
+}
+
+/* Eliminar espacio extra */
+.fc-daygrid-day-events {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 2px !important;
+    min-height: 0 !important;
+    position: absolute !important;
+    bottom: 1px !important;
+    left: 0 !important;
+    right: 0 !important;
+}
+.fc-event {
+    background-color: #4CAF50 !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 2px !important;
+    font-size: 0.6em !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    cursor: pointer !important;
+}
+.fc-daygrid-event-harness {
+    margin: 0 !important;
+}
+
+/* Ajustar el tamaño de la celda para acomodar el evento */
+.fc .fc-daygrid-day-frame {
+    min-height: 35px !important;
+    height: 35px !important;
+    position: relative !important;
+}
+
+.fc-daygrid-day-events:before {
+    display: none !important;
+}
+.fc-daygrid-day-bg {
+    display: none !important;
+}
+.fc-event:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+.fc .fc-daygrid-body {
+    min-height: unset !important;
+}
+
+/* Ajustar el espacio entre filas */
+.fc .fc-scrollgrid-section-body table {
+    height: auto !important;
+}
+
+/* Bordes y espaciado */
+.fc-theme-standard td, .fc-theme-standard th {
+    border: 1px solid #ddd !important;
+    padding: 0 !important;
+    vertical-align: top !important;
+}
+
+/* Botones del calendario */
+.fc .fc-button-primary {
+    background-color: #2c3e50 !important;
+    border-color: #2c3e50 !important;
+    font-size: 0.8em !important;
+    padding: 0.3em 0.6em !important;
+}
+
+.fc .fc-button-primary:hover {
+    background-color: #34495e !important;
+    border-color: #34495e !important;
+}
+.panel-header .toggle-icon i {
+    transition: transform 0.3s ease;
+}
+
+.panel-header.collapsed .toggle-icon i {
+    transform: rotate(-180deg);
+}
+
+#employee-list {
+    max-height: 500px;
+    overflow-y: auto;
+    transition: max-height 0.3s ease-out;
+}
+
+#employee-list.collapsed {
+    max-height: 0;
+    overflow: hidden;
+}
+
+/* Ajuste para la transición suave */
+.calendar-panel {
+    margin-top: 1rem;
+    transition: margin-top 0.3s ease;
+}
+
+.calendar-panel.expanded {
+    margin-top: 2rem;
+}
+/* Responsive */
+@media screen and (max-width: 1200px) {
+    .page-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .search-container {
+        width: 100%;
+        max-width: 600px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .dashboard-container {
+        padding: 0;
+    }
+
+    .panel-header h2 {
+        font-size: 1.1rem;
+    }
+
+    #employee-table {
+        font-size: 0.9rem;
+    }
+
+    #employee-table th,
+    #employee-table td {
+        padding: 0.75rem;
+    }
+
+    .calendar-panel {
+        padding: 0.5rem;
+    }
+}
+
+/* Animaciones */
+@keyframes slideDown {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.panel-content {
+    animation: slideDown 0.3s ease-out;
+}

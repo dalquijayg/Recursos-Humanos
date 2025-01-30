@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar Pago Vacaciones</title>
+    <link rel="stylesheet" href="../Disenos/PagoVacaciones.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header-section">
+            <div class="header-content">
+                <h1><i class="fas fa-money-check-alt"></i> Solicitud de Pago de Vacaciones</h1>
+                <p class="subtitle">Gestión de solicitudes de pago para períodos vacacionales</p>
+            </div>
+        </div>
+
+        <div class="employee-list-section">
+            <div class="section-header" id="employee-list-toggle">
+                <h2><i class="fas fa-users"></i> Lista de Colaboradores</h2>
+                <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="search-section">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="employee-search" placeholder="Buscar colaborador por nombre...">
+                </div>
+            </div>
+            <div class="section-content" id="employee-list-content">
+                <div class="table-container">
+                    <table id="employee-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-user"></i> Nombre Completo</th>
+                                <th><i class="fas fa-calendar-alt"></i> Inicio en Planilla</th>
+                                <th><i class="fas fa-calculator"></i> Días Disponibles</th>
+                                <th><i class="fas fa-briefcase"></i> Puesto</th>
+                                <th><i class="fas fa-building"></i> Departamento</th>
+                                <th><i class="fas fa-file-invoice-dollar"></i> Planilla</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los datos se llenarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="vacation-payment-info" class="payment-section" style="display: none">
+            <!-- La información de pago de vacaciones se llenará dinámicamente -->
+        </div>
+    </div>
+
+    <!-- Loader overlay -->
+    <div id="loader-overlay" class="loader-overlay">
+        <div class="loader"></div>
+        <p class="loading-text">Procesando solicitud...</p>
+    </div>
+    <script src="../Logica/PagoVacaciones.js"></script>
+</body>
+</html>

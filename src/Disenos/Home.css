@@ -190,3 +190,81 @@ body {
 .sidebar, .main-content {
     transition: all 0.3s ease;
 }
+.submenu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.submenu-with-children {
+    position: relative;
+}
+
+.submenu-parent {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+}
+
+.sub-arrow {
+    margin-left: auto;
+    transition: transform 0.3s;
+}
+
+.nested-submenu {
+    display: none;
+    padding-left: 20px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.submenu-with-children:hover .nested-submenu {
+    display: block;
+}
+/* Agregar al final de tu CSS actual */
+.dashboard-content {
+    margin-top: 30px;
+}
+
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card i {
+    font-size: 2.5em;
+    color: var(--primary-color);
+}
+
+.stat-info {
+    flex-grow: 1;
+}
+
+.stat-info span {
+    display: block;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.stat-info h3 {
+    margin: 0;
+    font-size: 0.9em;
+    color: #666;
+}

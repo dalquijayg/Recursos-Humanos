@@ -800,10 +800,10 @@ async function generarPDF() {
             pdf.text('Firma Colaborador', x + 5, firmaY + 4);
             
             pdf.line(x + anchoFirma + 10, firmaY, x + (anchoFirma * 2), firmaY);
-            pdf.text('Firma Jefe de Área', x + anchoFirma + 10, firmaY + 4);
+            pdf.text('Jefe/Gerente de Area', x + anchoFirma + 10, firmaY + 4);
             
             pdf.line(x + (anchoFirma * 2) + 10, firmaY, x + boletaWidth - 5, firmaY);
-            pdf.text('Firma Encargado', x + (anchoFirma * 2) + 10, firmaY + 4);
+            pdf.text('Firma Supervision', x + (anchoFirma * 2) + 10, firmaY + 4);
 
             pdf.text('Fecha recibido: ____/____/______', x + boletaWidth/2 - 25, firmaY + 12);
         }

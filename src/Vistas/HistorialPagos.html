@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Pagos</title>
+    <link rel="stylesheet" href="../Disenos/HistorialPagos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="header-content">
+                <h1><i class="fas fa-money-bill-wave"></i> Reporte de Pagos</h1>
+                <p class="subtitle">Historial y estado de pagos de vacaciones</p>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label for="estado-pago-select">
+                        <i class="fas fa-filter"></i> Estado del Pago:
+                    </label>
+                    <select id="estado-pago-select" class="custom-select">
+                        <option value="">Seleccione un estado de pago</option>
+                    </select>
+                </div>
+
+                <div class="status-indicators">
+                    <div class="status-badge" data-status="pending">
+                        <i class="fas fa-clock"></i>
+                        <span>Pendientes</span>
+                        <span class="count">0</span>
+                    </div>
+                    <div class="status-badge" data-status="authorized">
+                        <i class="fas fa-check"></i>
+                        <span>Autorizados</span>
+                        <span class="count">0</span>
+                    </div>
+                    <div class="status-badge" data-status="completed">
+                        <i class="fas fa-check-double"></i>
+                        <span>Completados</span>
+                        <span class="count">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="reporte-pagos-grid" class="results-section">
+            <div class="table-container">
+                <table id="reporte-pagos-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag"></i> ID</th>
+                            <th><i class="fas fa-user"></i> Nombre Completo</th>
+                            <th><i class="fas fa-calendar"></i> Fecha Registro</th>
+                            <th><i class="fas fa-calendar-day"></i> Días Solicitados</th>
+                            <th><i class="fas fa-clock"></i> Periodo</th>
+                            <th><i class="fas fa-file-invoice"></i> Planilla</th>
+                            <th><i class="fas fa-building"></i> Departamento</th>
+                            <th><i class="fas fa-user-edit"></i> Persona Registro</th>
+                            <th><i class="fas fa-user-check"></i> Personal Pago</th>
+                            <th><i class="fas fa-money-check"></i> No. Cheque</th>
+                            <th><i class="fas fa-receipt"></i> No. Recibo</th>
+                            <th><i class="fas fa-calendar-check"></i> Fecha Pago</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se llenarán dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loader Overlay -->
+    <div id="loader-overlay" class="loader-overlay">
+        <div class="loader"></div>
+        <p class="loading-text">Procesando solicitud...</p>
+    </div>
+    <script src="../Logica/HistorialPagos.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación de Vacaciones Tomadas</title>
+    <link rel="stylesheet" href="../Disenos/DocumentacionVacas.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="header-content">
+                <h1><i class="fas fa-file-alt"></i> Documentación de Vacaciones Tomadas</h1>
+                <p class="subtitle">Gestión y generación de documentos de vacaciones</p>
+            </div>
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="content-section">
+            <div class="search-section">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="doc-vacaciones-search" placeholder="Buscar por nombre...">
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="doc-vacaciones-tomadas-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-id-card"></i> ID Personal</th>
+                            <th><i class="fas fa-user"></i> Nombre Completo</th>
+                            <th><i class="fas fa-passport"></i> No. DPI</th>
+                            <th><i class="fas fa-file-invoice"></i> Planilla</th>
+                            <th><i class="fas fa-calendar-alt"></i> Periodo</th>
+                            <th><i class="fas fa-calendar-check"></i> Cantidad de Días</th>
+                            <th><i class="fas fa-print"></i> Imprimir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se llenarán dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loader Overlay -->
+    <div id="loader-overlay" class="loader-overlay">
+        <div class="loader"></div>
+        <p class="loading-text">Procesando solicitud...</p>
+    </div>
+    <script src="../Logica/DocumentacionVacas.js"></script>
+</body>
+</html>

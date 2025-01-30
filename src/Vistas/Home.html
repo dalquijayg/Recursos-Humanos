@@ -29,6 +29,69 @@
                     </a>
                 </div>
             </div>
+            <div class="menu-item">
+                <div class="menu-btn">
+                    <i class="fas fa-umbrella-beach"></i>
+                    <span>Vacaciones</span>
+                    <i class="fas fa-chevron-down arrow"></i>
+                </div>
+                <div class="submenu">
+                    <a href="#" class="submenu-item" id="tomaVacaciones">
+                        <i class="fas fa-calendar-plus"></i>
+                        <span>Toma de Vacaciones</span>
+                    </a>
+                    <a href="#" class="submenu-item" id="solicitudPago">
+                        <i class="fas fa-money-check-alt"></i>
+                        <span>Solicitar Pago de Vacaciones</span>
+                    </a>
+                    <a href="#" class="submenu-item" id="docVacaciones">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Doc. Vacaciones Tomadas</span>
+                    </a>
+                </div>
+            </div>
+            <div class="menu-item" id="menuVacacionesAdmin" style="display: none;">
+                <div class="menu-btn">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Vacaciones-Admin</span>
+                    <i class="fas fa-chevron-down arrow"></i>
+                </div>
+                <div class="submenu">
+                    <a href="#" class="submenu-item" id="registroVacaciones">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Registro Vacaciones</span>
+                    </a>
+                    <a href="#" class="submenu-item" id="registroPagoVacaciones">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Registro Pago Vacaciones</span>
+                    </a>
+                    <a href="#" class="submenu-item" id="pagosPorAutorizar">
+                        <i class="fas fa-hourglass-half"></i>
+                        <span>Pagos por Autorizar</span>
+                    </a>
+                    <a href="#" class="submenu-item" id="pagosAutorizados">
+                        <i class="fas fa-check-double"></i>
+                        <span>Pagos Autorizados</span>
+                    </a>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-btn">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Reportes</span>
+                    <i class="fas fa-chevron-down arrow"></i>
+                </div>
+                <div class="submenu">
+                    <a href="#" class="submenu-item" id="historialVacaciones">
+                        <i class="fas fa-history"></i>
+                        <span>Historial de Vacaciones</span>
+                    </a>
+                    <a href="#" class="submenu-item" id="historialPagos">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Historial de Pagos</span>
+                    </a>
+                </div>
+            </div>
         </nav>
         <div class="user-info">
             <img src="../Imagenes/usuario.png" alt="Usuario" class="user-avatar">
@@ -45,7 +108,57 @@
             </div>
         </div>
         <div class="content">
-            <!-- Aquí irá el contenido dinámico -->
+            <div class="dashboard-content">
+                <!-- Para usuarios administradores (permiso 123) -->
+                <div id="admin-stats" style="display: none;" class="stats-row">
+                    <div class="stat-card">
+                        <i class="fas fa-clock"></i>
+                        <div class="stat-info">
+                            <span id="pending-count">0</span>
+                            <h3>Solicitudes Pendientes</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-check"></i>
+                        <div class="stat-info">
+                            <span id="next-anniversary-count">0</span>
+                            <h3>Próximos Aniversarios</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <div class="stat-info">
+                            <span id="payments-count">0</span>
+                            <h3>Pagos Autorizados</h3>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Para usuarios normales -->
+                <div id="user-stats" style="display: none;" class="stats-row">
+                    <div class="stat-card">
+                        <i class="fas fa-umbrella-beach"></i>
+                        <div class="stat-info">
+                            <span id="available-days">0</span>
+                            <h3>Días Disponibles</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div class="stat-info">
+                            <span id="next-anniversary">--/--/----</span>
+                            <h3>Próximo Aniversario</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-clock"></i>
+                        <div class="stat-info">
+                            <span id="pending-requests">0</span>
+                            <h3>Solicitudes en Proceso</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="../Logica/Home.js"></script>

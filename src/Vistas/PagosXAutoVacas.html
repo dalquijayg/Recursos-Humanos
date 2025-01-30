@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagos de Vacaciones por Autorizar</title>
+    <link rel="stylesheet" href="../Disenos/PagosXAutoVacas.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="header-content">
+                <h1><i class="fas fa-file-invoice-dollar"></i> Pagos por Autorizar</h1>
+                <p class="subtitle">Gestión y autorización de pagos de vacaciones</p>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-container">
+                <div class="filter-group">
+                    <i class="fas fa-building"></i>
+                    <label for="departamento-filter-pago">Filtrar por Departamento:</label>
+                    <select id="departamento-filter-pago" class="custom-select">
+                        <option value="">Todos los departamentos</option>
+                    </select>
+                </div>
+                
+                <div class="pending-count">
+                    <i class="fas fa-clock"></i>
+                    <span>Solicitudes pendientes:</span>
+                    <span id="pending-count" class="count-badge">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-section">
+            <div class="table-container">
+                <table id="pago-vacaciones-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag"></i> ID</th>
+                            <th><i class="fas fa-user"></i> Nombre Completo</th>
+                            <th><i class="fas fa-calendar"></i> Fecha Registro</th>
+                            <th><i class="fas fa-calendar-day"></i> Días</th>
+                            <th><i class="fas fa-clock"></i> Periodo</th>
+                            <th><i class="fas fa-file-invoice"></i> Planilla</th>
+                            <th><i class="fas fa-building"></i> Departamento</th>
+                            <th><i class="fas fa-user-tie"></i> Encargado</th>
+                            <th><i class="fas fa-dollar-sign"></i> Salario Diario</th>
+                            <th><i class="fas fa-coins"></i> Salario Total</th>
+                            <th><i class="fas fa-check-circle"></i> Autorizar</th>
+                            <th><i class="fas fa-times-circle"></i> Anular</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se llenarán dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loader Overlay -->
+    <div id="loader-overlay" class="loader-overlay">
+        <div class="loader"></div>
+        <p class="loading-text">Procesando solicitud...</p>
+    </div>
+    <script src="../Logica/PagosXAutoVacas.js"></script>
+</body>
+</html>

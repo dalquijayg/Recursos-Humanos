@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Vacaciones</title>
+    <link rel="stylesheet" href="../Disenos/HistorialVacaciones.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="header-content">
+                <h1><i class="fas fa-history"></i> Reporte de Vacaciones</h1>
+                <p class="subtitle">Historial y reporte detallado de vacaciones</p>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label for="fecha-desde">
+                        <i class="fas fa-calendar-alt"></i> Desde:
+                    </label>
+                    <input type="date" id="fecha-desde" class="date-input">
+                </div>
+
+                <div class="filter-group">
+                    <label for="fecha-hasta">
+                        <i class="fas fa-calendar-alt"></i> Hasta:
+                    </label>
+                    <input type="date" id="fecha-hasta" class="date-input">
+                </div>
+
+                <div class="filter-group">
+                    <label for="departamento-filter-reporte">
+                        <i class="fas fa-building"></i> Departamento:
+                    </label>
+                    <select id="departamento-filter-reporte" class="custom-select">
+                        <option value="">Todos los departamentos</option>
+                    </select>
+                </div>
+
+                <button id="generar-reporte-vacaciones" class="generate-button">
+                    <i class="fas fa-file-alt"></i>
+                    Generar Reporte
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="reporte-vacaciones-grid" class="results-section">
+            <div class="table-container">
+                <table id="reporte-vacaciones-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-user"></i> Nombre Completo</th>
+                            <th><i class="fas fa-clock"></i> Periodo</th>
+                            <th><i class="fas fa-building"></i> Departamento</th>
+                            <th><i class="fas fa-calendar-check"></i> Dias Solicitados</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se llenarán dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Modal para Detalles -->
+        <div id="detalle-vacaciones-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-calendar-day"></i> Detalle de Vacaciones</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <p id="detalle-empleado-info" class="employee-info"></p>
+                <div class="detail-table-container">
+                    <table id="detalle-vacaciones-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-calendar"></i> Fecha</th>
+                                <th><i class="fas fa-calendar-day"></i> Día</th>
+                                <th><i class="fas fa-user"></i> Registrado por</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los datos se llenarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loader Overlay -->
+    <div id="loader-overlay" class="loader-overlay">
+        <div class="loader"></div>
+        <p class="loading-text">Procesando solicitud...</p>
+    </div>
+    <script src="../Logica/HistorialVacaciones.js"></script>
+</body>
+</html>

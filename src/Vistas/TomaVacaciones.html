@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toma de Vacaciones</title>
+    <link rel="stylesheet" href="../Disenos/TomaVacaciones.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js'></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loader -->
+    <div id="loader-overlay" class="loader-overlay" style="display: none;">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="dashboard-container">
+        <!-- Header de la página -->
+        <header class="page-header">
+            <h1><i class="fas fa-umbrella-beach"></i> Toma de Vacaciones</h1>
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="employee-search" placeholder="Buscar colaborador por nombre...">
+            </div>
+        </header>
+
+        <!-- Sección principal -->
+        <div id="vacation-section">
+            <!-- Panel de empleados -->
+            <div class="employee-panel">
+                <div class="panel-header" id="employee-list-toggle">
+                    <h2><i class="fas fa-users"></i> Colaboradores</h2>
+                    <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                
+                <div id="employee-list" class="panel-content">
+                    <div class="table-responsive">
+                        <table id="employee-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre Completo</th>
+                                    <th>Inicio en Planilla</th>
+                                    <th>Días Disponibles</th>
+                                    <th>Puesto</th>
+                                    <th>Departamento</th>
+                                    <th>Planilla</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Los datos se llenarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendario de vacaciones -->
+            <div id="calendar-container" class="calendar-panel" style="display: none;">
+                <div class="calendar-header">
+                    <h2 id="selected-employee-info">
+                        <i class="fas fa-user"></i>
+                        <span class="employee-name"></span>
+                    </h2>
+                </div>
+                <div class="calendar-wrapper">
+                    <div id="vacation-calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../Logica/TomaVacaciones.js"></script>
+</body>
+</html>
